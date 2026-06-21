@@ -214,3 +214,32 @@ def get_company_roadmaps(company_id: int):
     )
 
     return roadmaps
+
+@app.get("/dashboard/{company_id}")
+def get_dashboard(company_id: int):
+
+    db: Session = SessionLocal()
+
+    company = (
+        db.query(Company)
+        .filter(Company.id == company_id)
+        .first()
+    )
+
+    questions = (
+        db.query(Question)
+        .filter(Question.company_id == company_id)
+        .all()
+    )
+
+    roadmaps = (
+        db.query(Roadmap)
+        .filter(Roadmap.company_id == company_id)
+        .all()
+    )
+
+    return {
+        "company": company,
+        "questions": questions,
+        "roadmaps": roadmaps
+    }
