@@ -6,6 +6,8 @@ from models.user import User
 from schemas.user import UserCreate, UserLogin
 from utils.hash import hash_password, verify_password
 from utils.auth import create_access_token
+from models.company import Company
+from schemas.company import CompanyCreate
 
 app = FastAPI()
 
@@ -89,3 +91,38 @@ def login(user: UserLogin):
         "token_type": "bearer",
         "name": existing_user.name
     }
+
+@app.post("/companies")
+def add_company(company: CompanyCreate):
+
+    db: Session = SessionLocal()
+
+    new_company = Company(
+        company_name=company.company_name,
+        role=company.role,
+        experience=company.experience,
+        package=company.package,
+        roadmap=company.roadmap
+    )
+
+    db.add(new_company)
+
+    db.commit()
+
+    db.refresh(new_company)
+
+    return {
+        "message": "Company Added Successfully",
+        "company_id": new_company.id
+    }
+
+@app.get("/companies")
+def get_companies():
+
+    db: Session = SessionLocal()
+
+    companies = db.query(Company).all()
+
+    return companies
+
+
