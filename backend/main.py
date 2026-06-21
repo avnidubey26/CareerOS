@@ -158,3 +158,15 @@ def get_questions():
 
     return questions
 
+@app.get("/companies/{company_id}/questions")
+def get_company_questions(company_id: int):
+
+    db: Session = SessionLocal()
+
+    questions = (
+        db.query(Question)
+        .filter(Question.company_id == company_id)
+        .all()
+    )
+
+    return questions
