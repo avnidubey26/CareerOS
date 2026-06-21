@@ -10,6 +10,8 @@ from models.company import Company
 from schemas.company import CompanyCreate
 from schemas.question import QuestionCreate
 from models.question import Question
+from models.roadmap import Roadmap
+from schemas.roadmap import RoadmapCreate
 
 app = FastAPI()
 
@@ -170,3 +172,45 @@ def get_company_questions(company_id: int):
     )
 
     return questions
+
+@app.post("/roadmaps")
+def add_roadmap(roadmap: RoadmapCreate):
+
+    db: Session = SessionLocal()
+
+    new_roadmap = Roadmap(
+        company_id=roadmap.company_id,
+        title=roadmap.title,
+        description=roadmap.description
+    )
+
+    db.add(new_roadmap)
+
+    db.commit()
+
+    db.refresh(new_roadmap)
+
+    return {
+        "message": "Roadmap Added Successfully",
+        "roadmap_id": new_roadmap.id
+    }
+@app.get("/roadmaps")
+def get_roadmaps():
+
+    db: Session = SessionLocal()
+
+    roadmaps = db.query(Roadmap).all()
+
+    return roadmaps
+@app.get("/companies/{company_id}/roadmaps")
+def get_company_roadmaps(company_id: int):
+
+    db: Session = SessionLocal()
+
+    roadmaps = (
+        db.query(Roadmap)
+        .filter(Roadmap.company_id == company_id)
+        .all()
+    )
+
+    return roadmaps
