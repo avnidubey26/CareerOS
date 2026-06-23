@@ -265,3 +265,18 @@ def search_companies(keyword: str):
     )
 
     return companies
+
+@app.get("/dashboard-stats")
+def dashboard_stats():
+
+    db: Session = SessionLocal()
+
+    companies_count = db.query(Company).count()
+    questions_count = db.query(Question).count()
+    roadmaps_count = db.query(Roadmap).count()
+
+    return {
+        "companies": companies_count,
+        "questions": questions_count,
+        "roadmaps": roadmaps_count
+    }

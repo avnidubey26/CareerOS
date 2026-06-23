@@ -4,18 +4,21 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./index.css";
 
-
 import Home from "./pages/Home";
 import CompanyDetails from "./pages/CompanyDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
 
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
         <Route
           path="/company/:id"
@@ -30,6 +33,11 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/register"
           element={<Register />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
         />
 
       </Routes>
